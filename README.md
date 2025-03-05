@@ -32,24 +32,24 @@ The system utilizes **Web3.js and Express.js** to bridge the client-side interfa
 │ ├── 📄 minting.html # NFT minting page
 │ ├── 📄 transfer.html # NFT transfer page
 │
-│── 📁 js/ # Frontend JavaScript logic
+│── 📁 js/ # Frontend JavaScript logic  
 │ ├── 📁 abi/ # Smart contract ABI files
 │ ├── 📝 minting.js # Handles NFT minting logic
-│ ├── 📝 OrigAuthToken.json # Smart contract ABI for interaction
-│ ├── 🔑 token.js # Pinata API token management
+│ ├── 📝 OrigAuthToken.json # Smart contract ABI for interaction  
+│ ├── 🔑 token.js # Pinata API token management  
 │ ├── 🔄 transfer.js # Handles NFT transfer logic
 │ ├── ⚙️ web3Setup.js # Web3.js setup and contract connection
-│
-│── 📁 truffle/ # Smart contract and blockchain interactions
-│ ├── 📁 contracts/ # Solidity smart contracts
-│ ├── 📁 migrations/ # Deployment scripts
-│ ├── 📁 scripts/ # Custom scripts for contract interaction
-│ ├── 📦 package.json # Truffle dependencies and configuration
-│ ├── ⚙️ truffle-config.js # Truffle configuration file
-│
-│── 📁 tatent/ # Patent and documentation
-│ ├── 📄 특허출원서.pdf # Patent application document (Korean)
+│  
+│── 📁 truffle/ # Smart contract and blockchain interactions  
+│ ├── 📁 contracts/ # Solidity smart contracts  
+│ ├── 📁 migrations/ # Deployment scripts  
+│ ├── 📁 scripts/ # Custom scripts for contract interaction  
+│ ├── 📦 package.json # Truffle dependencies and configuration  
+│ ├── ⚙️ truffle-config.js # Truffle configuration file  
+│  
+│── 📁 tatent/ # Patent and documentation  
+│ ├── 📄 특허출원서.pdf # Patent application document (Korean)  
 │ ├── 📄 NFT 기반 디지털 소유권 관리.pdf # NFT-based digital ownership management document
-│
+│  
 │── 📄 presentation.pptx # Project presentation file
 │── 📄 README.md # Project documentation
