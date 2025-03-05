@@ -21,41 +21,41 @@ The system utilizes **Web3.js and Express.js** to bridge the client-side interfa
 
 📂 nft-mint-transfer/  
 │── 📁 ganache/ # Local blockchain environment setup  
-│ ├── 📄 .gitpod.Dockerfile #
+│ ├── 📄 .gitpod.Dockerfile #  
 │ ├── 📄 .gitpod.yml  
-│ ├── 📄 package.json
-│── 📄 server.js
+│ ├── 📄 package.json  
+│── 📄 server.js  
 │  
 │── 📁 html/ # Frontend HTML files  
-│ ├── 📄 dashboard.html
+│ ├── 📄 dashboard.html  
 │ ├── 📄 login.html  
-│ ├── 📄 minting.html
-│ ├── 📄 transfer.html
+│ ├── 📄 minting.html  
+│ ├── 📄 transfer.html  
 │  
 │── 📁 js/ # Frontend JavaScript logic  
-│ ├── 📁 abi/
-│ ├── 📄 OrigAuthToken.js
-│ ├── 📄 OrigAuthToken.json
-│ ├── 📄 minting.js
-│ ├── 📄 token.js
-│ ├── 📄 transfer.js
+│ ├── 📁 abi/  
+│ ├── 📄 OrigAuthToken.js  
+│ ├── 📄 OrigAuthToken.json  
+│ ├── 📄 minting.js  
+│ ├── 📄 token.js  
+│ ├── 📄 transfer.js  
 │ ├── 📄 web3Setup.js  
-│ ├── 📄 OrigAuthToken.json
+│ ├── 📄 OrigAuthToken.json  
 │  
 │── 📁 truffle/ # Smart contract and blockchain interactions  
-│ ├── 📁 contracts/
-│ ├── 📄 OrigAuthToken.sol
-│ ├── 📁 migrations/
-│ ├── 📄 1_deploy_contract.js
-│ ├── 📁 scripts/
-│ ├── 📄 getMyNFTs.js
-│ ├── 📄 mintNFT.js
-│ ├── 📄 package.json
-│ ├── 📄 truffle-config.js
+│ ├── 📁 contracts/  
+│ ├── 📄 OrigAuthToken.sol  
+│ ├── 📁 migrations/  
+│ ├── 📄 1_deploy_contract.js  
+│ ├── 📁 scripts/  
+│ ├── 📄 getMyNFTs.js  
+│ ├── 📄 mintNFT.js  
+│ ├── 📄 package.json  
+│ ├── 📄 truffle-config.js  
 │  
 │── 📁 tatent/ # Patent and documentation  
 │ ├── 📄 특허출원서.pdf # Patent application document (Korean)  
-│ ├── 📄 NFT 기반 디지털 소유권 관리.pdf
+│ ├── 📄 NFT 기반 디지털 소유권 관리.pdf  
 │  
 │── 📄 presentation.pptx # Project presentation file  
 │── 📄 README.md
