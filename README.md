@@ -59,3 +59,10 @@ The system utilizes **Web3.js and Express.js** to bridge the client-side interfa
 │  
 │── 📄 presentation.pptx # Project presentation file  
 │── 📄 README.md
+
+---
+
+## **⚠️ Security Notice**
+
+This repository contains a **sanitized version of the code**, with **API keys and sensitive information removed** for security reasons.  
+If you wish to run the project, please configure your own API keys and environment variables accordingly.
