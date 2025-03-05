@@ -21,35 +21,41 @@ The system utilizes **Web3.js and Express.js** to bridge the client-side interfa
 
 📂 nft-mint-transfer/  
 │── 📁 ganache/ # Local blockchain environment setup  
-│ ├── 📄 .gitpod.Dockerfile # Dockerfile for Gitpod environment  
-│ ├── 📄 .gitpod.yml # Gitpod configuration file  
-│ ├── 📦 package.json # Node.js package configuration for Ganache  
-│── 📝 server.js # Express.js API server  
+│ ├── 📄 .gitpod.Dockerfile #
+│ ├── 📄 .gitpod.yml  
+│ ├── 📄 package.json
+│── 📄 server.js
 │  
 │── 📁 html/ # Frontend HTML files  
-│ ├── 📄 dashboard.html # NFT dashboard  
-│ ├── 📄 login.html # Login page (Kakao API authentication)  
-│ ├── 📄 minting.html # NFT minting page  
-│ ├── 📄 transfer.html # NFT transfer page  
+│ ├── 📄 dashboard.html
+│ ├── 📄 login.html  
+│ ├── 📄 minting.html
+│ ├── 📄 transfer.html
 │  
 │── 📁 js/ # Frontend JavaScript logic  
-│ ├── 📁 abi/ # Smart contract ABI files  
-│ ├── 📝 minting.js # Handles NFT minting logic  
-│ ├── 📝 OrigAuthToken.json # Smart contract ABI for interaction  
-│ ├── 🔑 token.js # Pinata API token management  
-│ ├── 🔄 transfer.js # Handles NFT transfer logic  
-│ ├── ⚙️ web3Setup.js # Web3.js setup and contract connection  
+│ ├── 📁 abi/
+│ ├── 📄 OrigAuthToken.js
+│ ├── 📄 OrigAuthToken.json
+│ ├── 📄 minting.js
+│ ├── 📄 token.js
+│ ├── 📄 transfer.js
+│ ├── 📄 web3Setup.js  
+│ ├── 📄 OrigAuthToken.json
 │  
 │── 📁 truffle/ # Smart contract and blockchain interactions  
-│ ├── 📁 contracts/ # Solidity smart contracts  
-│ ├── 📁 migrations/ # Deployment scripts  
-│ ├── 📁 scripts/ # Custom scripts for contract interaction  
-│ ├── 📦 package.json # Truffle dependencies and configuration  
-│ ├── ⚙️ truffle-config.js # Truffle configuration file  
+│ ├── 📁 contracts/
+│ ├── 📄 OrigAuthToken.sol
+│ ├── 📁 migrations/
+│ ├── 📄 1_deploy_contract.js
+│ ├── 📁 scripts/
+│ ├── 📄 getMyNFTs.js
+│ ├── 📄 mintNFT.js
+│ ├── 📄 package.json
+│ ├── 📄 truffle-config.js
 │  
 │── 📁 tatent/ # Patent and documentation  
 │ ├── 📄 특허출원서.pdf # Patent application document (Korean)  
-│ ├── 📄 NFT 기반 디지털 소유권 관리.pdf # NFT-based digital ownership management document  
+│ ├── 📄 NFT 기반 디지털 소유권 관리.pdf
 │  
 │── 📄 presentation.pptx # Project presentation file  
-│── 📄 README.md # Project documentation
+│── 📄 README.md
