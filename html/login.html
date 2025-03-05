@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+
+    <!-- 글꼴 최적화 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome (아이콘 추가) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap JS and Popper.js (for Bootstrap functionality) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 카카오톡 SDK 추가 -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+    <style>
+      /* 전체 레이아웃 설정 */
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background-color: #f8f9fa;
+      }
+
+      header {
+        padding: 20px;
+        background-color: #343a40;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      header h1 {
+        font-size: 2rem;
+        margin: 0;
+        font-weight: bold;
+      }
+
+      nav ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 0;
+      }
+
+      nav ul li {
+        display: inline;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+
+      nav ul li a:hover {
+        color: #f0ad4e;
+      }
+
+      nav ul li a i {
+        margin-right: 5px;
+      }
+
+      .title-container {
+        background-color: #495057;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        width: 100%;
+      }
+
+      .container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+
+      .footer {
+        background-color: #343a40;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        position: relative;
+        width: 100%;
+        border-top: 1px solid white; /* 상단에 흰색 얇은 줄 추가 */
+      }
+
+      .btn-link {
+        color: #007bff;
+        text-decoration: underline;
+      }
+
+      .alert {
+        margin-top: 15px;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .col-md-4 {
+        padding: 10px;
+      }
+
+      .img-fluid {
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 모바일 최적화 */
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 1.5rem;
+        }
+
+        nav ul {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        nav ul li a {
+          font-size: 1rem;
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        .title-container {
+          padding: 8px;
+          font-size: 1.2rem;
+        }
+
+        .footer {
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        header h1 {
+          font-size: 1.2rem;
+        }
+
+        nav ul li a {
+          font-size: 0.9rem;
+        }
+
+        .container {
+          padding: 8px;
+        }
+
+        .title-container {
+          padding: 5px;
+          font-size: 1rem;
+        }
+      }
+    </style>
+
+    <script>
+      $(document).ready(function () {
+        // 카카오 SDK 초기화 (발급받은 JavaScript 키로 초기화합니다)
+        Kakao.init(""); // 카카오 JavaScript API 키
+        console.log(Kakao.isInitialized()); // SDK 초기화 여부 확인
+
+        // Ganache를 통한 이더리움 네트워크 연결
+        const web3 = new Web3("http://61.32.68.66:80");
+
+        // 스마트 컨트랙트 주소 및 ABI 설정
+        const contractAddress = "0x89Ae677A08f63c271499e0d2588C0A5C45B3D29f"; // 배포된 컨트랙트 주소
+
+        const contractABI = [
+          {
+            inputs: [],
+            stateMutability: "nonpayable",
+            type: "constructor",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: true,
+                internalType: "address",
+                name: "owner",
+                type: "address",
+              },
+              {
+                indexed: true,
+                internalType: "address",
+                name: "approved",
+                type: "address",
+              },
+              {
+                indexed: true,
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "Approval",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: true,
+                internalType: "address",
+                name: "owner",
+                type: "address",
+              },
+              {
+                indexed: true,
+                internalType: "address",
+                name: "operator",
+                type: "address",
+              },
+              {
+                indexed: false,
+                internalType: "bool",
+                name: "approved",
+                type: "bool",
+              },
+            ],
+            name: "ApprovalForAll",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: false,
+                internalType: "uint256",
+                name: "_fromTokenId",
+                type: "uint256",
+              },
+              {
+                indexed: false,
+                internalType: "uint256",
+                name: "_toTokenId",
+                type: "uint256",
+              },
+            ],
+            name: "BatchMetadataUpdate",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: false,
+                internalType: "uint256",
+                name: "_tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "MetadataUpdate",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: true,
+                internalType: "address",
+                name: "from",
+                type: "address",
+              },
+              {
+                indexed: true,
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                indexed: true,
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "Transfer",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: false,
+                internalType: "address",
+                name: "_to",
+                type: "address",
+              },
+              {
+                indexed: false,
+                internalType: "uint256",
+                name: "_tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "minting",
+            type: "event",
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "approve",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "owner",
+                type: "address",
+              },
+            ],
+            name: "balanceOf",
+            outputs: [
+              {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "getApproved",
+            outputs: [
+              {
+                internalType: "address",
+                name: "",
+                type: "address",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "owner",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "operator",
+                type: "address",
+              },
+            ],
+            name: "isApprovedForAll",
+            outputs: [
+              {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [],
+            name: "name",
+            outputs: [
+              {
+                internalType: "string",
+                name: "",
+                type: "string",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "ownerOf",
+            outputs: [
+              {
+                internalType: "address",
+                name: "",
+                type: "address",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "from",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "safeTransferFrom",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "from",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+              {
+                internalType: "bytes",
+                name: "data",
+                type: "bytes",
+              },
+            ],
+            name: "safeTransferFrom",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "operator",
+                type: "address",
+              },
+              {
+                internalType: "bool",
+                name: "approved",
+                type: "bool",
+              },
+            ],
+            name: "setApprovalForAll",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "bytes4",
+                name: "interfaceId",
+                type: "bytes4",
+              },
+            ],
+            name: "supportsInterface",
+            outputs: [
+              {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [],
+            name: "symbol",
+            outputs: [
+              {
+                internalType: "string",
+                name: "",
+                type: "string",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "tokenURI",
+            outputs: [
+              {
+                internalType: "string",
+                name: "",
+                type: "string",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "from",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "transferFrom",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                internalType: "string",
+                name: "_tokenURI",
+                type: "string",
+              },
+            ],
+            name: "mintNFT",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [],
+            name: "getMyNFTs",
+            outputs: [
+              {
+                internalType: "uint256[]",
+                name: "",
+                type: "uint256[]",
+              },
+              {
+                internalType: "string[]",
+                name: "",
+                type: "string[]",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "userId",
+                type: "string",
+              },
+            ],
+            name: "isExist",
+            outputs: [
+              {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "userId",
+                type: "string",
+              },
+              {
+                internalType: "address",
+                name: "_publickey",
+                type: "address",
+              },
+              {
+                internalType: "bytes32",
+                name: "_privatekey",
+                type: "bytes32",
+              },
+            ],
+            name: "createAccount",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "userId",
+                type: "string",
+              },
+            ],
+            name: "getAccount",
+            outputs: [
+              {
+                components: [
+                  {
+                    internalType: "address",
+                    name: "publickey",
+                    type: "address",
+                  },
+                  {
+                    internalType: "bytes32",
+                    name: "privatekey",
+                    type: "bytes32",
+                  },
+                ],
+                internalType: "struct OrigAuthToken.Account",
+                name: "",
+                type: "tuple",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+          },
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "from",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "to",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "tokenId",
+                type: "uint256",
+              },
+            ],
+            name: "nftTransfer",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ];
+
+        // 스마트 컨트랙트 인스턴스 생성
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+        let newAccount = null; // 지갑 정보를 한 번만 생성하고 저장할 변수
+
+        // 사용자 정보를 로컬 스토리지에 저장하는 함수
+        function storeUserInfo(walletAddress, privateKey) {
+          localStorage.setItem("walletAddress", walletAddress);
+          localStorage.setItem("privateKey", privateKey);
+          console.log("사용자 정보가 로컬 스토리지에 저장되었습니다.");
+          console.log(
+            "저장된 지갑 주소:",
+            localStorage.getItem("walletAddress")
+          );
+          console.log("저장된 개인키:", localStorage.getItem("privateKey"));
+
+          // 로그인 성공 후 UI 업데이트
+          updateUIAfterLogin();
+        }
+
+        loadUserInfo();
+
+        // 로그인 폼이 제출될 때 처리할 함수
+        $("form").on("submit", function (event) {
+          event.preventDefault(); // 기본 폼 제출 동작 방지
+
+          const username = $("#username").val(); // 폼에서 username 값 가져오기
+          if (!username) {
+            alert("유저 이름을 입력해주세요.");
+            return;
+          }
+
+          // 블록체인에서 계정 존재 여부 확인
+          contract.methods
+            .isExist(username)
+            .call()
+            .then(function (isExist) {
+              if (!isExist) {
+                // 계정이 없다면 새 계정 생성
+                if (!newAccount) {
+                  newAccount = web3.eth.accounts.create(); // 새 지갑 생성
+                  console.log("새 계정 생성됨:", newAccount);
+                }
+                const walletAddress = newAccount.address;
+                const privateKey = newAccount.privateKey;
+
+                // 블록체인에 계정 생성 트랜잭션 실행
+                web3.eth
+                  .getAccounts()
+                  .then(function (accounts) {
+                    return contract.methods
+                      .createAccount(username, walletAddress, privateKey)
+                      .send({
+                        from: accounts[0],
+                        gasPrice: web3.utils.toWei("20", "gwei"),
+                        gas: 3000000,
+                      });
+                  })
+                  .then(function (receipt) {
+                    console.log("계정 생성 완료:", receipt);
+                    $("#wallet-address").text("지갑 주소: " + walletAddress);
+                    $("#wallet-privatekey").text("개인키: " + privateKey);
+
+                    // 로컬 스토리지에 저장
+                    storeUserInfo(walletAddress, privateKey);
+                  })
+                  .catch(function (error) {
+                    console.error("계정 생성 중 오류:", error);
+                  });
+              } else {
+                // 계정이 이미 존재하면 가져오기
+                contract.methods
+                  .getAccount(username)
+                  .call()
+                  .then(function (account) {
+                    const walletAddress = account.publickey;
+                    const privateKey = account.privatekey;
+
+                    $("#wallet-address").text("지갑 주소: " + walletAddress);
+                    $("#wallet-privatekey").text("개인키: " + privateKey);
+                    console.log("계정 조회 완료:", account);
+
+                    // 로컬 스토리지에 저장
+                    storeUserInfo(walletAddress, privateKey);
+                  })
+                  .catch(function (error) {
+                    console.error("계정 조회 중 오류:", error);
+                  });
+              }
+            })
+            .catch(function (error) {
+              console.error("계정 존재 여부 확인 중 오류:", error);
+            });
+        });
+
+        // 로그인 후 UI를 업데이트하는 함수
+        function updateUIAfterLogin() {
+          // 로그인 성공 후 입력 필드와 버튼 숨기기
+          $("#username").hide();
+          $("#login-submit").hide();
+          $("#username-label").hide(); // "Username:" 레이블 숨기기
+          $("#kakao-login-btn").hide();
+          $("#clearLocalStorageBtn").show(); // 로그아웃 버튼 보이기
+        }
+
+        // 로그아웃 처리 함수
+        function logout() {
+          localStorage.removeItem("walletAddress");
+          localStorage.removeItem("privateKey");
+          alert("로그아웃되었습니다.");
+
+          // 화면 새로고침 및 UI 업데이트
+          location.reload();
+        }
+
+        // 로그인 상태 확인 함수
+        function checkLoginStatus() {
+          const walletAddress = localStorage.getItem("walletAddress");
+          if (walletAddress) {
+            updateUIAfterLogin(); // 로그인 상태이면 UI 업데이트
+          } else {
+            $("#clearLocalStorageBtn").hide(); // 로그아웃 버튼 숨기기
+          }
+        }
+
+        // 로컬 스토리지에서 사용자 정보를 불러오는 함수
+        function loadUserInfo() {
+          const walletAddress = localStorage.getItem("walletAddress");
+          const privateKey = localStorage.getItem("privateKey");
+
+          if (walletAddress && privateKey) {
+            document.getElementById("wallet-address").textContent =
+              "지갑 주소: " + walletAddress;
+            document.getElementById("wallet-privatekey").textContent =
+              "개인키: " + privateKey;
+            console.log("사용자 정보를 로컬 스토리지에서 불러왔습니다.");
+          }
+        }
+
+        // 로컬 스토리지에 저장된 데이터를 확인하는 함수
+        function checkLocalStorage() {
+          const walletAddress = localStorage.getItem("walletAddress");
+          const privateKey = localStorage.getItem("privateKey");
+
+          if (walletAddress && privateKey) {
+            console.log("로컬 스토리지에 저장된 지갑 주소:", walletAddress);
+            console.log("로컬 스토리지에 저장된 개인키:", privateKey);
+            alert(
+              "로컬 스토리지에 저장된 지갑 주소: " +
+                walletAddress +
+                "\n개인키: " +
+                privateKey
+            );
+          } else {
+            alert("로컬 스토리지에 저장된 정보가 없습니다.");
+          }
+        }
+
+        // 페이지가 로드될 때 로그인 상태 확인
+        checkLoginStatus();
+
+        // 카카오 로그인 함수
+        function kakaoLogin() {
+          Kakao.Auth.login({
+            success: function (authObj) {
+              console.log("액세스 토큰:", authObj.access_token); // 액세스 토큰 출력
+
+              // 이후 액세스 토큰을 사용하여 사용자 정보를 가져옵니다.
+              Kakao.API.request({
+                url: "/v2/user/me",
+                success: function (res) {
+                  const userId = res.id.toString();
+                  console.log("사용자 정보:", res);
+
+                  // 사용자 ID가 블록체인에 등록되어 있는지 확인
+                  contract.methods
+                    .isExist(userId)
+                    .call()
+                    .then(function (isExist) {
+                      if (!isExist) {
+                        // 지갑이 이미 생성되지 않았다면 새로 생성
+                        if (!newAccount) {
+                          newAccount = web3.eth.accounts.create(); // 지갑 한 번만 생성
+                          console.log("새 지갑 생성됨:", newAccount);
+                        }
+                        const walletAddress = newAccount.address;
+                        const privateKey = newAccount.privateKey;
+
+                        // 계정 생성 트랜잭션 호출
+                        web3.eth
+                          .getAccounts()
+                          .then(function (accounts) {
+                            return contract.methods
+                              .createAccount(userId, walletAddress, privateKey)
+                              .send({
+                                from: accounts[0],
+                                gasPrice: web3.utils.toWei("20", "gwei"), // 수동으로 가스 가격 설정
+                                gas: 3000000, // 필요한 가스량 설정
+                              });
+                          })
+                          .then(function (receipt) {
+                            console.log("계정 생성 완료:", receipt);
+                            document.getElementById(
+                              "wallet-address"
+                            ).textContent = "지갑 주소: " + walletAddress;
+                            document.getElementById(
+                              "wallet-privatekey"
+                            ).textContent = "개인키: " + privateKey;
+
+                            // 사용자 정보를 로컬 스토리지에 저장
+                            storeUserInfo(walletAddress, privateKey);
+                          })
+                          .catch(function (error) {
+                            console.error("계정 생성 중 오류:", error);
+                          });
+                      } else {
+                        // 이미 등록된 계정 정보 가져오기
+                        contract.methods
+                          .getAccount(userId)
+                          .call()
+                          .then(function (account) {
+                            console.log("등록된 계정 정보:", account);
+
+                            // 여기서 가져온 값을 walletAddress와 privateKey로 설정
+                            const walletAddress = account.publickey;
+                            const privateKey = account.privatekey;
+
+                            document.getElementById(
+                              "wallet-address"
+                            ).textContent = "지갑 주소: " + account.publickey;
+                            document.getElementById(
+                              "wallet-privatekey"
+                            ).textContent = "개인키: " + account.privatekey;
+
+                            // 사용자 정보를 로컬 스토리지에 갱신
+                            storeUserInfo(walletAddress, privateKey);
+                          })
+                          .catch(function (error) {
+                            console.error("계정 정보 조회 중 오류:", error);
+                          });
+                      }
+                    })
+                    .catch(function (error) {
+                      console.error("계정 존재 여부 확인 중 오류:", error);
+                    });
+                },
+                fail: function (error) {
+                  console.log("사용자 정보 요청 실패:", error);
+                },
+              });
+            },
+            fail: function (err) {
+              console.error("카카오 로그인 실패:", err);
+            },
+          });
+        }
+
+        // 카카오 로그인 버튼 클릭 이벤트
+        $("#kakao-login-btn").on("click", function () {
+          kakaoLogin(); // 로그인 함수 호출
+        });
+
+        // 로그아웃 버튼 클릭 이벤트 리스너
+        $("#clearLocalStorageBtn").on("click", logout);
+      });
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="title-container">
+        <h1>사용자 구매 인증 NFT 서비스</h1>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+          </li>
+          <li>
+            <a href="dashboard.html"
+              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="minting.html"><i class="fas fa-coins"></i> Minting</a>
+          </li>
+          <li>
+            <a href="transfer.html"
+              ><i class="fas fa-exchange-alt"></i> Transfer</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <!-- 일반 로그인 폼 -->
+      <form action="/login" method="POST">
+        <div class="form-group">
+          <label for="username" id="username-label">Username:</label>
+          <!-- Username 레이블 -->
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            placeholder="Enter username"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary" id="login-submit">
+          Login
+        </button>
+      </form>
+
+      <!-- 카카오톡 로그인 버튼 -->
+      <div style="margin-top: 20px">
+        <button id="kakao-login-btn" class="btn btn-warning">
+          카카오톡으로 로그인
+        </button>
+        <button
+          id="clearLocalStorageBtn"
+          class="btn btn-danger ml-2"
+          style="display: none"
+        >
+          로그아웃
+        </button>
+        <!-- 기본 숨김 상태 -->
+      </div>
+
+      <!-- 사용자 ID 표시 영역 -->
+      <div
+        id="wallet-address"
+        style="margin-top: 20px; font-weight: bold"
+      ></div>
+      <div
+        id="wallet-privatekey"
+        style="margin-top: 20px; font-weight: bold"
+      ></div>
+      <!-- 홈으로 돌아가는 링크 -->
+      <a href="../index.html" style="margin-top: 20px; display: block"
+        >Back to Home</a
+      >
+    </div>
+
+    <footer class="footer">
+      <p>2024 BlockChain project</p>
+    </footer>
+  </body>
+</html>

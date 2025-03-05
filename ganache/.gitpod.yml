@@ -1,0 +1,11 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: npm install  # 프로젝트 의존성 설치
+    command: ganache-cli --host 0.0.0.0 --port 8545 --db ./db  # Ganache 실행 및 데이터 저장
+
+ports:
+  - port: 8545
+    onOpen: open-preview  # Ganache가 실행되면 브라우저 미리보기로 열기
+

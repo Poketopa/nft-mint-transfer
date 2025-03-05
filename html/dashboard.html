@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 글꼴 최적화 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome (아이콘 추가) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap JS and Popper.js (for Bootstrap functionality) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>    
+
+    <style>        
+        /* 전체 레이아웃 설정 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #f0ad4e;
+        }
+
+        nav ul li a i {
+            margin-right: 5px;
+        }
+
+        .title-container {
+            background-color: #495057;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            border-top: 1px solid white; /* 상단에 흰색 얇은 줄 추가 */
+        }
+
+        .btn-link {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .alert {
+            margin-top: 15px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .col-md-4 {
+            padding: 10px;
+        }
+
+        .img-fluid {
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            nav ul li a {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .title-container {
+                padding: 8px;
+                font-size: 1.2rem;
+            }
+
+            .footer {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 8px;
+            }
+
+            .title-container {
+                padding: 5px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <header class="header">
+        <div class="title-container">
+            <h1>사용자 구매 인증 NFT 서비스</h1> <!-- 타이틀 -->
+        </div>
+        <nav>
+            <ul>
+                <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="minting.html"><i class="fas fa-coins"></i> Minting</a></li>
+                <li><a href="transfer.html"><i class="fas fa-exchange-alt"></i> Transfer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- 사용자 모드 -->
+        <div id="userMode">
+            <!-- 로그인 메시지 -->
+            <div id="userMessage" class="alert alert-warning" role="alert" style="display: none;">
+                로그인 해주세요
+                <br>
+                <a href="./login.html" class="btn btn-link">로그인 페이지로 이동</a>
+            </div>
+
+            <!-- NFT가 없을 때 보여줄 메시지 -->
+            <div id="noNFTMessage" class="alert alert-info" role="alert" style="display: none;">
+                보유한 NFT가 없습니다.
+            </div>
+
+            <!-- NFT 이미지가 표시될 영역 -->
+            <div id="nftGalleryUser" class="row"></div>
+        </div>
+    <!-- 홈으로 돌아가는 링크 -->
+    <a href="../index.html" style="margin-top: 20px; display: block;">Back to Home</a> 
+    </div>
+
+    <footer class="footer">
+        <p>2024 BlockChain project</p>
+    </footer>
+
+    <script>
+        const contractAddress = "0x89Ae677A08f63c271499e0d2588C0A5C45B3D29f"; // 스마트 컨트랙트 주소
+        let abi = null;
+        let tokenIds = [];
+        let tokenURIs = [];
+        const pinataBaseUrl = "https://chocolate-elegant-cougar-341.mypinata.cloud/ipfs/";
+    
+        // 이더리움 주소 유효성 검사 함수
+        function isValidEthereumAddress(address) {
+            return /^0x[a-fA-F0-9]{40}$/.test(address);
+        }
+    
+        // ABI를 JSON 파일에서 로드하는 함수
+        async function loadABI() {
+            try {
+                const response = await fetch('../js/OrigAuthToken.json'); // ABI JSON 파일 경로 수정 필요
+                const data = await response.json();
+                abi = data.abi; // ABI 값을 저장
+                console.log('ABI Loaded:', abi);
+            } catch (error) {
+                console.error('ABI 로드 중 오류 발생:', error);
+            }
+        }
+    
+        // Web3 인스턴스를 블록체인 노드에 연결
+        const web3 = new Web3(new Web3.providers.HttpProvider("http://61.32.68.66:80")); // 포트 번호는 환경에 맞게 수정
+    
+        async function checkWallet(userAddress) {
+        const nftGalleryDiv = document.getElementById("nftGalleryUser");
+        nftGalleryDiv.innerHTML = ''; // 기존 내용 초기화
+
+        try {
+            const nftContract = new web3.eth.Contract(abi, contractAddress);
+            const result = await nftContract.methods.getMyNFTs().call({ from: userAddress });
+
+            tokenIds = result[0];
+            tokenURIs = result[1];
+
+            if (tokenIds.length > 0) {
+                // NFT가 있을 때: NFT 리스트를 갤러리에 출력
+                for (let i = 0; i < tokenIds.length; i++) {
+                    const selectedTokenURI = tokenURIs[i];
+                    const finalUrl = pinataBaseUrl + selectedTokenURI;
+
+                    const response = await axios.get(finalUrl);
+                    const nftData = response.data;
+
+                    const imageUrl = pinataBaseUrl + nftData.image;
+
+                    // NFT 이미지 출력
+                    nftGalleryDiv.innerHTML += `
+                        <div class="col-4 col-md-4">
+                            <img src="${imageUrl}" alt="${nftData.name}" class="img-fluid mt-3" style="max-width: 100%; height: auto;">
+                        </div>
+                    `;
+                }
+                document.getElementById("userMessage").style.display = "none";
+                document.getElementById("noNFTMessage").style.display = "none";
+            } else {
+                document.getElementById("noNFTMessage").style.display = "block";
+            }
+        } catch (error) {
+            console.error("지갑 확인 중 오류 발생:", error);
+            nftGalleryDiv.innerHTML = '지갑 확인 중 오류가 발생했습니다.';
+        }
+    }
+
+
+        
+
+        // 페이지 로드 시 ABI를 먼저 로드하고, 로드 완료 후 지갑 확인 실행
+        window.onload = async function() {
+            await loadABI();
+            const storedWalletAddress = localStorage.getItem("walletAddress");
+
+            if (storedWalletAddress && isValidEthereumAddress(storedWalletAddress)) {
+                checkWallet(storedWalletAddress); // 사용자가 저장된 지갑 주소로 NFT 확인
+            } else {
+                document.getElementById("userMessage").style.display = "block";
+            }
+        };
+
+
+
+    </script>
+</body>
+</html>
