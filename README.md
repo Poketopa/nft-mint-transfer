@@ -1,11 +1,11 @@
-# 🏆 NFT 민팅 및 전송 서비스
+# NFT 민팅 및 전송 서비스
 
 이 프로젝트는 NFT(Non-Fungible Token, 대체 불가능 토큰)를 활용하여 디지털 자산의 소유권을 안전하게 발행(Mint)하고, 전송(Transfer)할 수 있는 시스템입니다.
 **Ganache**를 사용해 가스비 없이 테스트할 수 있으며, **Web3.js와 Express.js**로 블록체인과 연동합니다.
 
 ---
 
-## 📌 주요 기능
+## 주요 기능
 
 - **카카오 로그인** 후 지갑 연동
 - **NFT 발행**: 사용자가 이미지 기반 NFT를 생성
@@ -14,7 +14,7 @@
 
 ---
 
-## ⚙️ 기술 스택
+## 기술 스택
 
 - Frontend: HTML, JavaScript, Web3.js
 - Backend: Node.js, Express.js
@@ -23,7 +23,7 @@
 
 ---
 
-## 📂 폴더 구조
+## 폴더 구조
 
 📂 nft-mint-transfer/  
 │── 📁 ganache/ # Local blockchain environment setup  
@@ -68,7 +68,7 @@
 
 ---
 
-## **⚠️ 참고**
+## **참고**
 
 - 특허 출원서 및 발표 자료는 `patent/`, `presentation.pptx`에서 확인할 수 있습니다.
 - 본 프로젝트는 학습 및 연구 목적이며, 실제 서비스 환경에서는 보안 및 추가 검토가 필요합니다.
